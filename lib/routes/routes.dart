@@ -12,3 +12,4 @@ final Map<String, Widget Function(BuildContext)> app_routes = {
   '/register': ( _ ) => RegisterPage(),
   '/splash': ( _ ) => SplashPage(),
 };
+
