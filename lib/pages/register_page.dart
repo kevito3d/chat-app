@@ -1,10 +1,15 @@
+import 'package:chat_real_time/helpers/alerts.dart';
+import 'package:chat_real_time/services/auth_service.dart';
 import 'package:chat_real_time/widgets/btn_blue.dart';
 import 'package:chat_real_time/widgets/custom_input.dart';
 import 'package:chat_real_time/widgets/labels_widget.dart';
 import 'package:chat_real_time/widgets/logo_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RegisterPage extends StatelessWidget {
+  const RegisterPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,6 +60,9 @@ class __FormState extends State<_Form> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthService>(
+      context,
+    );
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -84,11 +92,25 @@ class __FormState extends State<_Form> {
             height: 10,
           ),
           BtnBlue(
-            text: "Igresar",
-            onPressed: () {
-              print(emailController.text);
-              print(passwordController.text);
-            },
+            text: "Crear cuenta",
+            onPressed: authProvider.autenticando
+                ? () {}
+                : () async {
+                    FocusScope.of(context).unfocus();
+                    final registerOk = await authProvider.register(
+                      nameController.text.trim(),
+                      emailController.text.trim(),
+                      passwordController.text.trim(),
+                    );
+                    if (registerOk == true) {
+                      // conectar al socket server
+                      Navigator.pushReplacementNamed(context, '/users');
+                    } else {
+                      // mostrar alerta
+                      showAlert(context, 'Registro incorrecto', registerOk);
+                      // print(registerOk);
+                    }
+                  },
           ),
           const SizedBox(height: 10),
           Text('¿Olvidaste tu contraseña?',
@@ -101,5 +123,3 @@ class __FormState extends State<_Form> {
     );
   }
 }
-
-

@@ -1,10 +1,15 @@
+import 'package:chat_real_time/helpers/alerts.dart';
+import 'package:chat_real_time/services/auth_service.dart';
 import 'package:chat_real_time/widgets/btn_blue.dart';
 import 'package:chat_real_time/widgets/custom_input.dart';
 import 'package:chat_real_time/widgets/labels_widget.dart';
 import 'package:chat_real_time/widgets/logo_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
+  const LoginPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +24,9 @@ class LoginPage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: const [
-                  LogoWidget(title: "Login",),
+                  LogoWidget(
+                    title: "Login",
+                  ),
                   _Form(),
                   LabelsWidget(
                     isLogin: true,
@@ -52,6 +59,9 @@ class __FormState extends State<_Form> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthService>(
+      context,
+    );
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -76,10 +86,21 @@ class __FormState extends State<_Form> {
           ),
           BtnBlue(
             text: "Igresar",
-            onPressed: () {
-              print(emailController.text);
-              print(passwordController.text);
-            },
+            onPressed: authProvider.autenticando
+                ? () {}
+                : () async {
+                    FocusScope.of(context).unfocus();
+                    final loginOk = await authProvider.login(
+                        emailController.text.trim(),
+                        passwordController.text.trim());
+                    if (loginOk) {
+                      // navegar a otra pantalla
+                      Navigator.pushReplacementNamed(context, '/users');
+                    } else {
+                      showAlert(
+                          context, "Login Incorrecto", "revise sus datos");
+                    }
+                  },
           ),
           const SizedBox(height: 10),
           Text('¿Olvidaste tu contraseña?',

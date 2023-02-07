@@ -1,8 +1,12 @@
+import 'package:chat_real_time/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_real_time/models/user_model.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class UserPage extends StatefulWidget {
+  const UserPage({super.key});
+
   @override
   State<UserPage> createState() => _UserPageState();
 }
@@ -11,21 +15,25 @@ class _UserPageState extends State<UserPage> {
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   final users = [
-    User(isLogged: true, name: "Kevin", email: "kevin@gmail.com", id: "1"),
-    User(isLogged: false, name: "Juan", email: "juan@hotmail.com", id: "2"),
-    User(isLogged: true, name: "Pedro", email: "peditro@outlook.com", id: "3"),
+    User(online: true, name: "Kevin", email: "kevin@gmail.com", uid: "1"),
+    User(online: false, name: "Juan", email: "juan@hotmail.com", uid: "2"),
+    User(online: true, name: "Pedro", email: "peditro@outlook.com", uid: "3"),
   ];
   @override
   Widget build(BuildContext context) {
+    final authServise = Provider.of<AuthService>(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Usuarios'),
+        title: Text(authServise.user!.name),
         centerTitle: true,
         elevation: 1,
         backgroundColor: Colors.deepPurple,
         leading: IconButton(
           icon: const Icon(Icons.exit_to_app),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, '/login');
+            AuthService.deleteToken();
+          },
         ),
         actions: [
           Container(
@@ -87,7 +95,7 @@ class _UserPageState extends State<UserPage> {
         width: 10,
         height: 10,
         decoration: BoxDecoration(
-            color: user.isLogged ? Colors.green : Colors.red,
+            color: user.online ? Colors.green : Colors.red,
             borderRadius: BorderRadius.circular(100)),
       ),
     );
