@@ -6,10 +6,10 @@ import 'package:chat_real_time/pages/user_page.dart';
 import 'package:flutter/cupertino.dart';
 
 final Map<String, Widget Function(BuildContext)> app_routes = {
-  '/users': ( _ ) => UserPage(),
+  '/users': ( _ ) => const UserPage(),
   '/chat': ( _ ) => ChatPage(),
-  '/login': ( _ ) => LoginPage(),
-  '/register': ( _ ) => RegisterPage(),
-  '/splash': ( _ ) => SplashPage(),
+  '/login': ( _ ) => const LoginPage(),
+  '/register': ( _ ) => const RegisterPage(),
+  '/splash': ( _ ) => const SplashPage(),
 };
 
