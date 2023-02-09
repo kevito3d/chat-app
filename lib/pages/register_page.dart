@@ -1,11 +1,12 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:chat_real_time/helpers/alerts.dart';
 import 'package:chat_real_time/services/auth_service.dart';
+import 'package:chat_real_time/services/socket_service.dart';
 import 'package:chat_real_time/widgets/btn_blue.dart';
 import 'package:chat_real_time/widgets/custom_input.dart';
 import 'package:chat_real_time/widgets/labels_widget.dart';
 import 'package:chat_real_time/widgets/logo_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});
@@ -63,6 +64,9 @@ class __FormState extends State<_Form> {
     final authProvider = Provider.of<AuthService>(
       context,
     );
+    final socketService = Provider.of<SocketService>(
+      context,
+    );
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -104,6 +108,8 @@ class __FormState extends State<_Form> {
                     );
                     if (registerOk == true) {
                       // conectar al socket server
+                      socketService.connect();
+
                       Navigator.pushReplacementNamed(context, '/users');
                     } else {
                       // mostrar alerta
