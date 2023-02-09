@@ -20,6 +20,7 @@ class User {
     String email;
     bool online;
     String uid;
+    bool writting = false;
 
     factory User.fromJson(Map<String, dynamic> json) => User(
         name: json["name"],
